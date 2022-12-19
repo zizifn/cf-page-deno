@@ -7,8 +7,19 @@ async function errorHandling(context: EventContext<any, any, any>) {
 }
 
 function authentication(context: EventContext<any, any, any>) {
-  console.log("auth");
-  return context.next();
+  const basicAuth = context.request.headers.get("Authorization") || "";
+  const authString = basicAuth.split(" ")?.[1] || "";
+  if (atob(authString).includes("test")) {
+    return new Response(``, {
+      status: 401,
+      headers: {
+        "content-type": "text/html; charset=utf-8",
+        "WWW-Authenticate": "Basic",
+      },
+    });
+  } else {
+    return context.next();
+  }
 }
 
 export const onRequest = [errorHandling, authentication];
