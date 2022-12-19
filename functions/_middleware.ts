@@ -9,7 +9,7 @@ async function errorHandling(context: EventContext<any, any, any>) {
 function authentication(context: EventContext<any, any, any>) {
   const basicAuth = context.request.headers.get("Authorization") || "";
   const authString = basicAuth.split(" ")?.[1] || "";
-  if (atob(authString).includes("test")) {
+  if (!atob(authString).includes("test")) {
     return new Response(``, {
       status: 401,
       headers: {
